@@ -1,0 +1,24 @@
+IMEI:358240051111110
+IMSI:310260000000000
+OSVersion:3.10.0+
+apiLevel:7.1.1
+model:Android SDK built for x86_64
+device:generic_x86_64
+product:sdk_google_phone_x86_64
+0
+IMEI:358240051111110
+IMSI:310260000000000
+OSVersion:3.10.0+
+apiLevel:7.1.1
+model:Android SDK built for x86_64
+device:generic_x86_64
+product:sdk_google_phone_x86_64
+0
+IMEI:358240051111110
+IMSI:310260000000000
+OSVersion:3.10.0+
+apiLevel:7.1.1
+model:Android SDK built for x86_64
+device:generic_x86_64
+product:sdk_google_phone_x86_64
+0

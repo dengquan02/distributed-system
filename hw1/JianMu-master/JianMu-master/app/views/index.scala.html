@@ -1,0 +1,132 @@
+@import java.util
+
+@import dto.{Condition, DatasetDescription, WebpageDataset}
+@import play.mvc.Http.Request
+@(cSort: String, cAscending: String, datasets: util.List[DatasetDescription], uploadForm: Form[WebpageDataset], condForm: Form[Condition])(implicit request: Request, messages: play.i18n.Messages)
+
+@main("Telco Data") {
+    <h3>电信数据
+        <a href="https://github.com/tongjimobiml/JianMu" target="_blank">
+            <img alt="github link" width=21" height="21"
+            src="@routes.Assets.versioned("images/github-mark.png")">
+        </a>
+    </h3>
+    @* Flash shows updates to a page *@
+    @request.flash.asScala.data.map { case (name, value) =>
+        <div class="@name">@value</div>
+    }
+    <hr/>
+
+    <h5>下载App</h5>
+    <div><a href="@routes.HomeController.downloadApp(cSort, java.lang.Boolean.parseBoolean(cAscending))">下载</a></div>
+    <hr/>
+
+    @* Global errors are not tied to any particular form field *@
+    @if(uploadForm.hasGlobalErrors) {
+        @uploadForm.globalErrors.asScala.map { error: play.data.validation.ValidationError =>
+            <div class="alert alert-warning">
+                @error.key: @error.message
+            </div>
+        }
+    }
+    <h5>上传数据集</h5>
+    @helper.form(action = routes.HomeController.uploadFromWebPage, Symbol("enctype") -> "multipart/form-data", Symbol("class") -> "form-inline") {
+        @helper.CSRF.formField
+        <input type="hidden" name="sort" value="@cSort">
+        <input type="hidden" name="ascending" value="@cAscending">
+        <div class="form-row align-items-bottom">
+            <div class="col-auto">
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <label for="token" class="input-group-text">Token</label>
+                    </div>
+                    <input type="password" id="token" name="token" class="form-control">
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <label for="file" class="input-group-text">数据集</label>
+                    </div>
+                    <input type="file" id="file" name="file" class="form-control">
+                </div>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-dark mb-2">上传</button>
+            </div>
+        </div>
+    }
+    <hr/>
+
+    @if(condForm.hasGlobalErrors) {
+        @condForm.globalErrors.asScala.map { error: play.data.validation.ValidationError =>
+            <div class="alert alert-warning">
+                @error.key: @error.message
+            </div>
+        }
+    }
+    <h5>已有数据列表 <small class="lead"> ( 数据集总数: @(datasets.size) ) </small> </h5>
+    @helper.form(action = routes.HomeController.sort, Symbol("enctype") -> "multipart/form-data", Symbol("class") -> "form-inline") {
+        @helper.CSRF.formField
+        <div class="form-row align-items-bottom">
+            <div class="col-auto">
+                @defining(Seq("name" -> "文件名", "recordNum" -> "数据量", "recordStartDate" -> "数据开始时间",
+                    "recordEndDate" -> "数据结束时间", "uploadDate" -> "上传时间", "fileSize" -> "数据文件大小")) { opts =>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <label for="sort" class="input-group-text">排序标准</label>
+                        </div>
+                        <select id="sort" name="sort" class="form-control">
+                            @for((value, label) <- opts) {
+                                <option @if(value.contentEquals(cSort)) {selected} value="@value"> @label </option>
+                            }
+                        </select>
+                    </div>
+                }
+            </div>
+            <div class="col-auto">
+                @defining(Seq("true" -> "升序", "false" -> "降序")) {opts =>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <label for="ascending" class="input-group-text">升/降序 &#8693;</label>
+                        </div>
+                        <select id="ascending" name="ascending" class="form-control">
+                            @for((value, label) <- opts) {
+                                <option @if(value.contentEquals(cAscending)) {selected} value="@value"> @label </option>
+                            }
+                        </select>
+                    </div>
+                }
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-info mb-2">排序</button>
+                <a target="_blank"  href="@routes.HomeController.visual("")">轨迹分类可视化</a>
+            </div>
+        </div>
+    }
+    <br/>
+    <table class="table table-striped table-bordered table-hover table-sm">
+        <thead class="thead-light">
+            <tr>
+                <th>文件名</th> <th>数据量/条</th>
+                <th>数据开始时间</th> <th>数据结束时间</th>
+                <th>上传时间</th> <th>文件大小</th>
+                <th>预览</th>
+                <th>下载</th>
+                <th>轨迹</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(ds <- datasets) {
+                <tr>
+                    <td>@ds.getName</td> <td>@ds.getRecordNum</td>
+                    <th>@ds.getRecordStartDate</th> <th>@ds.getRecordEndDate</th>
+                    <th>@ds.getUploadDate</th> <th>@ds.getReadableFileSize</th>
+                    <th><a target="_blank" href="@routes.HomeController.viewDataset(ds.getName, java.lang.Boolean.TRUE, cSort, cAscending)">&#10140;</a></th>
+                    <th><a href="@routes.HomeController.viewDataset(ds.getName, java.lang.Boolean.FALSE, cSort, cAscending)">&#10515;</a></th>
+                    <th><a target="_blank" href="@routes.HomeController.trajectory(ds.getName)">&#10140;</a></th>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

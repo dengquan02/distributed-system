@@ -1,0 +1,158 @@
+@(allTrajectory: String)
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>trajectory classification</title>
+        <style>
+                html,
+                body,
+                #map {
+                    width: 100%;
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .demo-title {
+                    position: absolute;
+                    top: 25px;
+                    left: 25px;
+                    z-index: 1;
+                }
+
+                h1 {
+                    font-size: 18px;
+                    margin: 0;
+                    color: rgb(180, 180, 190);
+                }
+
+                h3 {
+                    font-size: 12px;
+                    font-weight: normal;
+                    margin-top: 5px;
+                    color: rgb(150, 150, 150);
+                }
+        </style>
+    </head>
+
+    <body>
+        <div class="demo-title">
+            <h1>轨迹分类</h1>
+            <h3>所有数据各运动模式轨迹情况</h3>
+        </div>
+        <div id="map"></div>
+        <script src="https://webapi.amap.com/maps?v=2.0&key=37f1f9cb88dbbf5a536591ba33b30b00&plugin=AMap.Scale,AMap.ToolBar"></script>
+        <script src="https://webapi.amap.com/loca?v=2.0.0&key=37f1f9cb88dbbf5a536591ba33b30b00"></script>
+        <script src="assets/javascripts/GPSconvert.js"></script>
+        <script>
+                var map = (new AMap.Map('map', {
+                    zoom: 15.8,
+                    center: [121.215, 31.284],
+                    showLabel: false,
+                    viewMode: '3D',
+                    mapStyle: 'amap://styles/grey',
+                    pitch: 40,
+                }));
+
+                var loca = new Loca.Container({
+                    map,
+                });
+                window._loca = loca;
+                var allTrajectory = @allTrajectory;
+                var features = [];
+                for (var i = 0; i < allTrajectory.length; i++) {
+                    for(var key in allTrajectory[i]){
+                        var feature = {
+                            "type": "Feature",
+                            "properties": {
+                                "type": key
+                            },
+                            "geometry": {
+                                "type": "LineString",
+                                "coordinates":GPS.gcj_encrypt(allTrajectory[i][key])
+                            }
+                        };
+                        features.push(feature)
+                    }
+                    console.log(features)
+                }
+
+                var geo = new Loca.GeoJSONSource({
+                    //url: 'https://a.amap.com/Loca/static/loca-v2/demos/mock_data/bj_bus.json',
+                    data: {
+                        "type": "FeatureCollection",
+                        "features": features
+                    }
+                });
+
+                var layer = new Loca.PulseLineLayer({
+                    // loca,
+                    zIndex: 10,
+                    opacity: 1,
+                    visible: true,
+                    zooms: [2, 22],
+                });
+
+                var headColors = ['#EFBB51', '#4CC19B', '#E06AC4', '#F15C1A', '#7A0FA6'];
+
+                console.log('geo', geo);
+                layer.setSource(geo);
+                layer.setStyle({
+                    altitude: 0,
+                    lineWidth: 2,
+                    // 脉冲头颜色
+                    headColor: (_, feature) => {
+                        if(feature.properties.type==="Walk")
+                            return headColors[0];
+                        else if(feature.properties.type==="Run")
+                            return headColors[1];
+                        else if(feature.properties.type==="Bike")
+                            return headColors[2];
+                        else if(feature.properties.type==="Car")
+                            return headColors[3];
+                        else
+                            return headColors[4];
+                    },
+                    // 脉冲尾颜色
+                    trailColor: 'rgba(128, 128, 128, 0.5)',
+                    // 脉冲长度，0.25 表示一段脉冲占整条路的 1/4
+                    interval: 0.25,
+                    // 脉冲线的速度，几秒钟跑完整段路
+                    duration: 5000,
+                });
+                loca.add(layer);
+                loca.animate.start();
+
+                // 图例
+                var lengend = new Loca.Legend({
+                    loca: loca,
+                    title: {
+                        label: 'Mode',
+                        fontColor: 'rgba(255,255,255,0.4)',
+                        fontSize: '16px'
+                    },
+                    style: {
+                        backgroundColor: 'rgba(255,255,255,0.1)',
+                        left: '20px',
+                        bottom: '40px',
+                        fontSize: '12px'
+                    },
+                    dataMap: [
+                        {label: 'Walk', color: headColors[0]},
+                        {label: 'Run', color: headColors[1]},
+                        {label: 'Bike', color: headColors[2]},
+                        {label: 'Car', color: headColors[3]},
+                        {label: 'Other', color: headColors[4]},
+                    ],
+                });
+
+                loca.animate.start();
+                var dat = new Loca.Dat();
+                dat.addLayer(layer, '轨迹');
+
+        </script>
+    </body>
+</html>

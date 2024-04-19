@@ -1,0 +1,17 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET         /                     controllers.HomeController.index(sort: String ?= "uploadDate", ascending: Boolean ?= false)
+POST        /sort                 controllers.HomeController.sort(request: Request)
+
+POST        /uploadwebpage        controllers.HomeController.uploadFromWebPage(request: Request)
+POST        /uploads              controllers.HomeController.fileUploadApi(request: Request)
+
+GET         /view/:name           controllers.HomeController.viewDataset(name: String, inline: Boolean ?= true, sort: String ?= "uploadDate", ascending: Boolean ?= false)
+GET         /downloadapp          controllers.HomeController.downloadApp(sort: String ?= "uploadDate", ascending: Boolean ?= false)
+
+GET         /trajectory           controllers.HomeController.trajectory(name: String)
+GET         /visual               controllers.HomeController.visual(name: String)
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file         controllers.Assets.versioned(path="/public", file: Asset)

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="com.tongjimobiml"
+		module="jianmu_2.13"
+		revision="1.0-SNAPSHOT"
+		conf="provided"
+		confs="compile, runtime, test, provided, optional, web-assets, web-assets-test, web-plugin, universal, universal-docs, universal-src, windows, docker, linux, rpm, debian, compile-internal, runtime-internal, test-internal, plugin, pom, scala-tool, docs"
+		date="20211220230007"/>
+	<dependencies>
+		<module organisation="org.projectlombok" name="lombok">
+			<revision name="1.18.8" status="release" pubdate="20190507062040" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://projectlombok.org" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="0">
+				<license name="The MIT License" url="https://projectlombok.org/LICENSE"/>
+				<metadata-artifact status="no" details="" size="2600" time="0" location="C:\Users\Gu HungJou\.ivy2\cache\org.projectlombok\lombok\ivy-1.18.8.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/projectlombok/lombok/1.18.8/lombok-1.18.8.pom"/>
+				<caller organisation="com.tongjimobiml" name="jianmu_2.13" conf="provided" rev="1.18.8" rev-constraint-default="1.18.8" rev-constraint-dynamic="1.18.8" callerrev="1.0-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="lombok" type="jar" ext="jar" status="no" details="" size="1730973" time="0" location="C:\Users\Gu HungJou\.ivy2\cache\org.projectlombok\lombok\jars\lombok-1.18.8.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+	</dependencies>
+</ivy-report>

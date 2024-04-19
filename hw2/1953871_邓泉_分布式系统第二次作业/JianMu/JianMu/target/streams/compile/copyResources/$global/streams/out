@@ -1,0 +1,6 @@
+[debug] Copy resource mappings: 
+[debug] 	(X:\JianMu\conf\application.conf,X:\JianMu\target\scala-2.13\classes\application.conf)
+[debug] 	(X:\JianMu\conf\common.conf,X:\JianMu\target\scala-2.13\classes\common.conf)
+[debug] 	(X:\JianMu\conf\deploy.conf,X:\JianMu\target\scala-2.13\classes\deploy.conf)
+[debug] 	(X:\JianMu\conf\logback.xml,X:\JianMu\target\scala-2.13\classes\logback.xml)
+[debug] 	(X:\JianMu\conf\routes,X:\JianMu\target\scala-2.13\classes\routes)
